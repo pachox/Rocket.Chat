@@ -80,10 +80,10 @@ deploy:
   overwrite: true
   on:
     tags: true
-#after_deploy:
-#- ".travis/docker.sh"
-#- ".travis/update-releases.sh"
-#- ".travis/snap.sh"
+after_deploy:
+- ".travis/docker.sh"
+- ".travis/update-releases.sh"
+- ".travis/snap.sh"
 env:
   global:
   - DISPLAY=:99.0
