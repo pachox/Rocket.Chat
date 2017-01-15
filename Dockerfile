@@ -9,9 +9,11 @@ VOLUME /app/uploads
 #COPY rocket.chat.tgz /tmp/
 
 RUN set -x \
- && curl -SLf "https://github.com/pachox/Rocket.Chat/archive/develop.zip" -o rocket.chat.tgz \
+ && curl -SLf "https://github.com/pachox/Rocket.Chat/archive/develop.zip" -o rocket.chat.zip \
 
-&& tar -zxf rocket.chat.tgz -C /app \
+ && unzip rocket.chat.tgz -d /app \
+ 
+##&& tar -zxf rocket.chat.tgz -C /app \
  && rm rocket.chat.tgz \
  && cd /app/bundle/programs/server \
  && npm install \
