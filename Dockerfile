@@ -1,19 +1,25 @@
-FROM rocketchat/base
+FROM rocketchat/base-fd
 
 ENV RC_VERSION develop
 
-MAINTAINER buildmaster@rocket.chat
+MAINTAINER p.baratta@fabbricadigitale.it
 
 VOLUME /app/uploads
 
 COPY rocket.chat.tgz /tmp/
 
 RUN set -x \
- && tar -zxvf /tmp/rocket.chat.tgz -C /app \
- && rm /tmp/rocket.chat.tgz \
+ && curl -SLf "https://github.com/pachox/Rocket.Chat.git" -o rocket.chat.tgz \
+
+&& tar -zxf rocket.chat.tgz -C /app \
+ && rm rocket.chat.tgz rocket.chat.tgz.asc \
  && cd /app/bundle/programs/server \
  && npm install \
  && npm cache clear
+# 
+#&& tar -zxvf /tmp/rocket.chat.tgz -C /app \
+# && rm /tmp/rocket.chat.tgz \
+
 
 USER rocketchat
 
