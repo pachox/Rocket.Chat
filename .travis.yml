@@ -71,16 +71,13 @@ before_deploy:
 - ".travis/namefiles.sh"
 - echo ".travis/sandstorm.sh"
 deploy:
-  provider: s3
-  access_key_id: AKIAIKIA7H7D47KUHYCA
-  secret_access_key: "$ACCESSKEY"
-  bucket: download.rocket.chat
+   provider: releases
+  api_key: "b938f3fa99c0af25b9bb182915c9d73a97935386"
+  file: "rocket.chat.tgz"
   skip_cleanup: true
-  upload_dir: build
-  local_dir: "$ROCKET_DEPLOY_DIR"
+  overwrite: true
   on:
-    condition: "$TRAVIS_PULL_REQUEST=false"
-    all_branches: true
+    tags: true
 after_deploy:
 - ".travis/docker.sh"
 - ".travis/update-releases.sh"
