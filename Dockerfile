@@ -9,21 +9,22 @@ VOLUME /app/uploads
 #COPY rocket.chat.tgz /tmp/
 
 RUN set -x \
- && curl -SLf "https://github.com/pachox/Rocket.Chat/archive/develop.zip" -o rocket.chat.zip \
+ && curl -SLf "https://github.com/pachox/Rocket.Chat/archive/fd.01.00.tar.gz" -o rocket.chat.tgz \
  
- && apt-get update \
- && apt-get -y install unzip \
+ #&& apt-get update \
+ #apt-get -y install unzip \
 
- && unzip rocket.chat.zip -d /app \
+ ## && unzip rocket.chat.zip -d /app \
  
-##&& tar -zxf rocket.chat.tgz -C /app \
- && rm rocket.chat.zip \
+&& tar -zxf rocket.chat.tgz -C /app \
+ #&& rm rocket.chat.zip \
+ && mkdir /app/bundle
  && cd /app/bundle/programs/server \
  && npm install \
  && npm cache clear
 # 
 #&& tar -zxvf /tmp/rocket.chat.tgz -C /app \
-# && rm /tmp/rocket.chat.tgz \
+ && rm /tmp/rocket.chat.tgz \
 
 
 USER rocketchat
