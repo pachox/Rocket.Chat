@@ -14,16 +14,13 @@ RUN set -x \
  #&& apt-get update \
  #apt-get -y install unzip \
 
- ## && unzip rocket.chat.zip -d /app \
  
-&& tar -zxf rocket.chat.tgz -C /app \
- #&& rm rocket.chat.zip \
+ 
+ && tar -zxf rocket.chat.tgz -C /app \
  && mkdir /app/bundle
  && cd /app/bundle/programs/server \
  && npm install \
- && npm cache clear
-# 
-#&& tar -zxvf /tmp/rocket.chat.tgz -C /app \
+ && npm cache clear \
  && rm /tmp/rocket.chat.tgz \
 
 
