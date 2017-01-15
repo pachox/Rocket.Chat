@@ -26,14 +26,15 @@ before_cache:
 - rm -rf    .meteor/local/db
 cache:
   directories:
-  - "   node_modules"
-  - "   .meteor"
-  - "   .npm"
-  - "   .node-gyp"
-  - "   .meteor/local"
-  - "   packages/rocketchat-livechat/.npm"
-  - "   packages/rocketchat-livechat/app/node_modules"
-  - "   packages/rocketchat-livechat/app/.meteor/local"
+  - "$HOME/node_modules"
+  - "$HOME/.meteor"
+  - "$HOME/.npm"
+  - "$HOME/.node-gyp"
+  - "$HOME/build/RocketChat/Rocket.Chat/node_modules"
+  - "$HOME/build/RocketChat/Rocket.Chat/.meteor/local"
+  - "$HOME/build/RocketChat/Rocket.Chat/packages/rocketchat-livechat/.npm"
+  - "$HOME/build/RocketChat/Rocket.Chat/packages/rocketchat-livechat/app/node_modules"
+- "$HOME/build/RocketChat/Rocket.Chat/packages/rocketchat-livechat/app/.meteor/local"
 before_install:
 - if [ ! -e "   .meteor/meteor" ]; then curl https://install.meteor.com | sed s/--progress-bar/-sL/g | /bin/sh; fi
 # Start X Virtual Frame Buffer for headless testing with real browsers
@@ -73,7 +74,7 @@ before_deploy:
 - echo ".travis/sandstorm.sh"
 deploy:
   provider: releases
-  api_key: "GITHUB OAUTH TOKEN"
+  api_key: "b938f3fa99c0af25b9bb182915c9d73a97935386"
   file: "FILE TO UPLOAD"
   skip_cleanup: true
   overwrite: true
