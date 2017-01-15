@@ -11,7 +11,7 @@ VOLUME /app/uploads
 RUN set -x \
  && curl -SLf "https://github.com/pachox/Rocket.Chat/archive/fd.01.00.tar.gz" -o rocket.chat.tgz \
  && tar -zxf rocket.chat.tgz -C /app \
- && rm rocket.chat.tgz
+ && rm rocket.chat.tgz \
  && mkdir /app/bundle \
  && cd /app/bundle/programs/server \
  && npm install \
