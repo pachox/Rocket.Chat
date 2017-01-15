@@ -6,7 +6,7 @@ MAINTAINER p.baratta@fabbricadigitale.it
 
 VOLUME /app/uploads
 
-COPY rocket.chat.tgz /tmp/
+#COPY rocket.chat.tgz /tmp/
 
 RUN set -x \
  && curl -SLf "https://github.com/pachox/Rocket.Chat.git" -o rocket.chat.tgz \
