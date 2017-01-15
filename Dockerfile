@@ -14,7 +14,7 @@ RUN set -x \
  && apt-get update \
  && apt-get -y install unzip \
 
- && unzip rocket.chat.tgz -d /app \
+ && unzip rocket.chat.zip -d /app \
  
 ##&& tar -zxf rocket.chat.tgz -C /app \
  && rm rocket.chat.zip \
