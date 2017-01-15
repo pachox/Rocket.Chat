@@ -10,6 +10,9 @@ VOLUME /app/uploads
 
 RUN set -x \
  && curl -SLf "https://github.com/pachox/Rocket.Chat/archive/develop.zip" -o rocket.chat.zip \
+ 
+ && apt-get update \
+ && apt-get -y install unzip \
 
  && unzip rocket.chat.tgz -d /app \
  
