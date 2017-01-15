@@ -1,4 +1,4 @@
-FROM rocketchat/base-fd
+FROM rocketchat
 
 ENV RC_VERSION develop
 
