@@ -69,6 +69,7 @@ before_deploy:
 - ".travis/namefiles.sh"
 - echo ".travis/sandstorm.sh"
 deploy:
+  skip_cleanup: true
   provider: releases
   api_key:
     secure: CEUQXhBp0USsrPislyGd+X30tSiJ6dMaNhzCswfvbyAuv/MlfK9Vb4MRjckP8EvEdFCKJKDtthrwdfnKTkvZMmBcomtyqu34MPtE56G3tQyFNbJJDg3DvIKhWTbKdBJepd7av5KRzCkHE3/nYX9yP+xaqauBSH44hMPhvCtBhuRk8hPiv+U4ihBR41vj75yrggD5L86yv5GXATI+VbwG+7cZKGydNmNHdfw4N92jLNHvAvkSJPPXNvFbKHAcbPhpOpITFruhQHpgfMCgDi/yaDh8VN0enwvIonEK9LGC9coJ3VrZFeGCGYMIQQ6fI3bZ5GIzI+UCpj26iq2/Q9XNP70LS6IPfT0s+LFybrojXp97JeaBCLnsKV6cTfOrSCt2gJLs8Yc7dYIefB3LrfYK697qQ0oGLztlVUS44VNIpUAzC225VSBDOB+RC+L2IOlw7lkfA4bDEAJcKNbfgHw+zGgmj8/XM+8CfOMmUS0GU921AyiG4u1/tsZVB67TVXstF6zNokuN/I+gL+zPFVSCUs+AakpA5EQPdjW+RY4TwnOacMOpvu+3dNa8zkGYRZmMfaK3lYKY1Q+SsyDTehNLJshTI/t0peSqm8S+VEI7vtez04MEw1VxHmshC3uuCJrNJCnPIYu2exisSoe2aIh391SlzRnLdO98X3ccuVUrMhw=
