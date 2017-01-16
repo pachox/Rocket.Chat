@@ -69,7 +69,7 @@ script:
 before_deploy:
 - source ".travis/setartname.sh"
 - source ".travis/setdeploydir.sh"
-- ".travis/setupsig.sh"
+#- ".travis/setupsig.sh"
 - ".travis/namefiles.sh"
 - echo ".travis/sandstorm.sh"
 deploy:
