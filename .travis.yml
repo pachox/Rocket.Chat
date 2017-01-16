@@ -3,11 +3,11 @@ services:
 - docker
 - mongodb
 sudo: required
-branches:
-  only:
-  - develop
-  - experimental
-  - "/^(\\d+\\.)?(\\d+\\.)?(\\*|\\d+)$/"
+#branches:
+  #only:
+  #- develop
+  #- experimental
+  #- "/^(\\d+\\.)?(\\d+\\.)?(\\*|\\d+)$/"
 git:
   depth: 1
 node_js:
