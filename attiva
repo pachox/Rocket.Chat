@@ -2,5 +2,5 @@ cp /mnt/scambio/Dockerfile .
 cp /mnt/scambio/travis.yml .
 cp /mnt/scambio/.travis.yml .
 git add -A && git commit -a -m "Changed Travis"
-git tag 0.9
+git tag 0.10
 git push --tags
