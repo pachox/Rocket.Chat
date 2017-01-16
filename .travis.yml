@@ -1,107 +1,100 @@
---- 
-addons: 
-  apt: 
-    packages: 
-      - google-chrome-stable
-      - g++-4.8
-    sources: 
-      - google-chrome
-      - ubuntu-toolchain-r-test
-  firefox: latest
-after_deploy: 
-  - .travis/docker.sh
-  - .travis/update-releases.sh
-  - .travis/snap.sh
-before_cache: 
-  - "rm -rf $HOME/build/RocketChat/Rocket.Chat/.meteor/local/log"
-  - "rm -rf $HOME/build/RocketChat/Rocket.Chat/.meteor/local/run"
-  - "rm -rf $HOME/build/RocketChat/Rocket.Chat/.meteor/local/db"
-before_deploy: 
-  - "source \".travis/setartname.sh\""
-  - "source \".travis/setdeploydir.sh\""
-  - .travis/setupsig.sh
-  - .travis/namefiles.sh
-  - "echo \".travis/sandstorm.sh\""
-before_install: 
-  - "if [ ! -e \"$HOME/.meteor/meteor\" ]; then curl https://install.meteor.com | sed s/--progress-bar/-sL/g | /bin/sh; fi"
-  - .scripts/start-xvfb.sh
-before_script: 
-  - "echo \"replication:\" | sudo tee -a /etc/mongod.conf"
-  - "echo \"  replSetName: \\\"rs0\\\"\" | sudo tee -a /etc/mongod.conf"
-  - "sudo service mongod restart"
-  - "mkdir /tmp/build"
-  - "travis_retry npm install"
-  - "mongo --eval 'rs.initiate({_id:\"rs0\", members: [{\"_id\":1, \"host\":\"localhost:27017\"}]})'"
-  - "npm run lint"
-  - "npm run stylelint"
-  - "travis_retry meteor build --headless /tmp/build"
-  - "mkdir /tmp/build-test"
-  - "tar -xf /tmp/build/Rocket.Chat.tar.gz -C /tmp/build-test/"
-  - "cd /tmp/build-test/bundle/programs/server"
-  - "npm install -g node-gyp node-pre-gyp"
-  - "npm install"
-  - "cd -"
-  - "mongo --eval 'rs.status()'"
-  - "mongo meteor --eval 'db.getCollectionNames()'"
-branches: 
-  only: 
-    - develop
-    - experimental
-    - /^(\d+\.)?(\d+\.)?(\*|\d+)$/
-cache: 
-  directories: 
-    - $HOME/node_modules
-    - $HOME/.meteor
-    - $HOME/.npm
-    - $HOME/.node-gyp
-    - $HOME/build/RocketChat/Rocket.Chat/node_modules
-    - $HOME/build/RocketChat/Rocket.Chat/.meteor/local
-    - $HOME/build/RocketChat/Rocket.Chat/packages/rocketchat-livechat/.npm
-    - $HOME/build/RocketChat/Rocket.Chat/packages/rocketchat-livechat/app/node_modules
-    - $HOME/build/RocketChat/Rocket.Chat/packages/rocketchat-livechat/app/.meteor/local
-deploy: 
-  api_key: b938f3fa99c0af25b9bb182915c9d73a97935386
-  file: Rocket.chat.tgz
-  overwrite: true
-  provider: releases
-  skip_cleanup: true
-  true: 
-    tags: true
-env: 
-  global: 
-    - "DISPLAY=:99.0"
-    - CXX=g++-4.8
-    - 
-      secure: HrPOM5sBibYkMcf9aeQThYPCDiXeLkg0Xgv0HvH88/ku/gphDpNEjHNReHZM3cyfm9y3RhHpVdD+Zzy38S2goKyewRzpXJsuyerOYkjND0v3tivhs9CAX8PAUxj1U5zllTyH4bgW2ZwRtNnwnmtIM/JJlnySMpKVDqIZBpbhn3ph9bJ2J+BW3D3Jw8meQ1vCX8szIibyJK/5QX6HG2RBFXJGYoQ8DmR8jQv0aJQvT1Az5DO4yImk8tX4NP95qOc19Jywr1DsbaSBZeJ8lFJAmBpIGx7KAmUVCcxSxfbXGRhs2K4iEYb3rJ/dU6KiyPsKGUG4aYNGgbvcX0ZxX/BZ6ZU9ff0E4IIf43IxoN3ElrOqOFk5msJAXbrJEreINSzDqKOy8NFYtCQ49E2gwzfage4ZXkhFyx3wMPa5bzpr3ncsTceMjMVz03uL781X6NLuCkUmXv+n8K2MNhJU9Xinpdx1GRJm+0lXJspNNJ1ruHeJtls4epj4bmCwKmmZbFKPXqa5e8xVcMIkwt1LMiHduhE+WgKNHdOMhXrCcTxF62ybLlsHXmyLLJeNjTeKS8QG2XSoonClDAz/1R41I1DsMPblcgz9uvYCf7UtyftbhJ83bnJeEmOYQiwijLG0+QMq+B2+mmZan3Z7Hl7O53dnwuLxz7EO7EhQhY+CqHVgc6s=
-    - 
-      MONGO_OPLOG_URL: "mongodb://localhost:27017/local"
-    - 
-      MONGO_URL: "mongodb://localhost:27017/meteor"
-    - 
-      TEST_MODE: "true"
-    - 
-      secure: G8NOoeAPyEdfHM4Stqn/RvUwSF29PPQ0Yrz2K3/3c4Vaoi0wNtR7Ky3Jafijl5GRCzNDJAFPhSSgvCHEywu0RVlyBsKeCMqKShNbvBH2BK/qoa7Mivr9R0WzR9s8/nt5NVshauZ/rDaltT1mvu+dltAfSFa8aNqXI2VriG0OI6GFwwcpzQjddPh+8rl5VwX6u9+RNeAgbQyQ9FdHdjrP/lJUTnD6iesfGPEZMl6k81YDymM0HZ8ah22uIGGRdKVboR5HzegET1xznL2xW6SdWEpMd+bj5+saSauC7yKEKr6p1pzIW+mTgv5jqMWFVN7HOwFshHQvZwi1ZMWk9IYpqaIRmR/ZbdmzTSUTld1Gc+KtZo9CgVwlLYB8tSCmRIv6uD86BVkDg6vl5LSJe342x8Ycs+da8IV3zpYDs0AFIj112YIPLTeMFj6eh9TFdPezANHKgsHwKVA9vFI4eO+BcVCslS17Xk8UmMq9qYQRZxMf5NknlZ5giduaikh6pcbmS7LO952zio4vNHlZy8uuZ7aJkeZ9a+GGOuPH4AGcn+fFgXdJHgHbchwL3puTE4eUERe8h2bZcStdEaVVx6k+OVdO0wJ+UBO6O+F7Vr0IeNb0Dj1MsbxZ8kA+XOzfa0L6xBW41qRwOzT0TUr3iMNmDTuJ3fP7/NbEd8h8BBs507Y=
-    - 
-      secure: EHAXcPr9CKDyYDxw7RGGReTzwTIgzFTOnn6w9oYcR/VbwSCp58EmNB3zhWRxywDCQdJvJNtvLrFz3LxgkHptf8g/REQC9M+fkAix6C2CHymHcJqX5k419/bOyOuEHSuFCXdyms0mk4pejR09XwlCvFbWsL3f2a/b7aQvsX//UKVy3ZAG0vlksXFKAhWjjlI/SCYysCLGNgCKs2pOZ9AnY3YNsVvrnZZP8BHqwtoQ8Wlp37ugrkDIZ3Xz8SexPzy57fvMgA6ghwowjWfOC177/EGvQ7ehGG4+F+sLOGClVzWGjqCCT74ZmHYuXDMY6ZBix0H4i6BtgZSEvdXWuNdddKgfaussgifweYuXBvYFX9PR0LdUfuEE+If+Q3gKBBvPh8K2fPlV8rRlEOWEJ61RaCiFdibKzcD1ZNQ7IthexElKkCg1HDtK2ebLtDxCNmsaKNJ9K6GXI6TMeQ4DSfJ496wmmEMgbQ7ZEQib0vZknCi2b0c6m94VMFnKtVxtU3oUHDPSJb1MjH+s0xOSaty5sffvN6Dl7N5GIgr/6spSwt6KEcaxBicOny2F1PCQn2kI05zopl1suSWWaVvvhviO2dx0KTvsBk80a1RUGhESOPyq5g2QhqmJ9I6bHD9tuxAwg9IXDdT7KkDoVw0jJKV/XGrtreT+ZnoNmtd227q63gY=
-    - 
-      secure: IEJ0M6472NPIm2JMJAhLHfx3py8rCrljUvisDt/BoXXfmtlonl50/WDanzdM9sRNuq4yjR4e/IkKaug0Dr/aGNA+3OApk0VgmCDVnBt656xCaEBQXcD4Gf30SYUT7L4aPGVnHJibgzP8/zFCiH8vUbJBRD5UPoJZzUVv6Boe94JRQU6Gl2JqxIo49VrDbCIuFRvch/0HkDH1M3YwX1DSTMFFlzSB8XHF21r7EIEl0vnEfCBRQd7oe1HgmfODwoyZsoc40JE0xWyzjb/AQj9MCCSV2FeGM7LoDtF/uM7ESszvSavgRuWXCG2FDrd8Ht4QBhp1+FyNZMC96r/dpYKpb/wE4k1Psd0FVTAtrAFOoBKUJP5odsmzqhZoNHLmGct257fc6w81Zz6xraaRBZBUjeEGLt2i9uiBZsaIIdl82TJWqLMjzG+hDEUL3pXTieiNkO4JD3kHhNrzH+VKPOy6pA3GjGEfRLjrk/fYyemtV+BxdQSZhZagyAzp3vesNdyt/w2exFSJUHMAH7MiY48VNZNiFEXhwQhnCMTMck5XvZLU2T48uaerePVbXVNUuLt3k9TqRSoUW+Owo8Tl4lznOkuiiRjzFj7MvP0LN61RXaYS8jckAa9s5cxnfbgtjx9SAnuwf2i3M7ZP9sloUkLNMFALWX8VPJ0iz4qsFqUucac=
-    - 
-      secure: iWij6z3KOYC3fwyLj7BbRu3O15g85zCXeJLafvdeWLvcNIsxKy7frMkSIus+yiuNLTBZUy7SFAKxsnVRSul/tcM2tmfxuTFHtZ9qevwtO5jOxdwYq+tSPzXaOYpHc/uJDdAOCpcglyH74LdpexEifLqc8tQkhMWeOrmsy1UOVowjAPWfeuon3AvdNXeknnDj9xMRI5/eEHziJkMf+6vHw0hZytUf8OudwIW1QlcFRr4OC6pW/980dTI9l+1mPlU3LXylCDZLS/hfuCX3+TyAenK7zjZ7pU5/yUCOCeI6t5dg/411l5pOFd1YYX6Jko+Nuu/+m9dsg5eSIlc6kifKUAPDNbyHg4sLdkU883DfD/hT22fX9luUCKKnKRCCguhUnvkDTunOpbGBMhG9pmh5SNzsctU/2Nz8aH8f/ao0eGJTx7o+TWyCrzPt6m/s7reLiiysoIdcln9nLZOJqLMOrhj+GJcIQGWO5+yBZTvImDs0/Ry9e+jyTEggXnM6jsBorPMp0K3zUd/5g8T1xHOTuB9eTYwLo2k53ZBrSVzrnKVRLCp+EJw3oxSN046jCVRrIuPL8g7av1tNYHsmi0pPirkn3VeeabErNeWqtCAFNetIBkz6om1AUz9rwO4EVbylo+x2REP3u7kQYF4wxh7xAd7ZxbIMW3dtjo1S8hA2NhM=
-    - 
-      secure: gkeTy12y/cvsdPAQPXppfB5yYq1SmH4vHlJKF/qIccDU2u1OHGsTYEIHKq9gRFYLbAkd22TUAZhXVbqtpupvzt0ulKZCqKKtdozkfRHgrp8P/K6FYuUgAnpkUfY1M9jZ2hfaxPxEpIlqc8CES/jB9UnZ5ayt/65cD+Jdg6DJZy4Wa134APsQazrRlPwy/h0sQKqkG68XWTdbQQqwRwFSPah6ikgYWaype2VvV9qULJgtZHRM48qgdQWCW98sOuTg9ltZkBi5nf/mZLZabPC5WVuYIV19O3OJzcMKaD5dHFIsHqAitr09k6eXE5/IDhUlT3aJCnlariZyRuWTVq/ADnSzei/9ziyhrE7TslOeLzOnRMNCAHM7IlurCxVXP96NJkiP8M87W7vNePDElmN2VjsKjUufBo70iqNmZk7yxVMzErccBESfeW4/cRWfSxbrD7VBFvHASTLb81f8HXHmZ118Gip2Zt4MwyNlL/Pri9iEZQSTC6/1Zq9Y9sMezdUh1XpjA+nPxUg6T2+m7nF0i6BUIwcHgcLAn/tTUYxLJrIixwys7oUdmGBIn1Zc0osg3l6mGFZ+cg+iE8fJTct2GtgJyubVvrsVLsSXDxQ2ofMcx/1a8I5UBpraN77XW36Geo9V564JkPMf0flNKe2rdGHNvJTYPuFu2JXJpPdHV2
-git: 
-  depth: 1
-install: 
-  - "export PATH=\"$HOME/.meteor:$PATH\""
 language: node_js
-node_js: 
-  - "4"
-script: 
-  - "npm test"
-  - "mongo meteor --eval 'db.dropDatabase()'"
-  - "unset MONGO_OPLOG_URL"
-  - "npm test"
-services: 
-  - docker
-  - mongodb
-
+services:
+- docker
+- mongodb
+branches:
+  only:
+  - develop
+  - experimental
+  - "/^(\\d+\\.)?(\\d+\\.)?(\\*|\\d+)$/"
+git:
+  depth: 1
+node_js:
+- '4'
+addons:
+  apt:
+    sources:
+    - google-chrome
+    - ubuntu-toolchain-r-test
+    packages:
+    - google-chrome-stable
+    - g++-4.8
+  firefox: "latest"
+before_cache:
+- rm -rf $HOME/build/RocketChat/Rocket.Chat/.meteor/local/log
+- rm -rf $HOME/build/RocketChat/Rocket.Chat/.meteor/local/run
+- rm -rf $HOME/build/RocketChat/Rocket.Chat/.meteor/local/db
+cache:
+  directories:
+  - "$HOME/node_modules"
+  - "$HOME/.meteor"
+  - "$HOME/.npm"
+  - "$HOME/.node-gyp"
+  - "$HOME/build/RocketChat/Rocket.Chat/node_modules"
+  - "$HOME/build/RocketChat/Rocket.Chat/.meteor/local"
+  - "$HOME/build/RocketChat/Rocket.Chat/packages/rocketchat-livechat/.npm"
+  - "$HOME/build/RocketChat/Rocket.Chat/packages/rocketchat-livechat/app/node_modules"
+  - "$HOME/build/RocketChat/Rocket.Chat/packages/rocketchat-livechat/app/.meteor/local"
+before_install:
+- if [ ! -e "$HOME/.meteor/meteor" ]; then curl https://install.meteor.com | sed s/--progress-bar/-sL/g | /bin/sh; fi
+# Start X Virtual Frame Buffer for headless testing with real browsers
+- .scripts/start-xvfb.sh
+install:
+- export PATH="$HOME/.meteor:$PATH"
+before_script:
+- echo "replication:" | sudo tee -a /etc/mongod.conf
+- |-
+  echo "  replSetName: \"rs0\"" | sudo tee -a /etc/mongod.conf
+- sudo service mongod restart
+- mkdir /tmp/build
+- travis_retry npm install
+- |-
+  mongo --eval 'rs.initiate({_id:"rs0", members: [{"_id":1, "host":"localhost:27017"}]})'
+- npm run lint
+- npm run stylelint
+- travis_retry meteor build --headless /tmp/build
+- mkdir /tmp/build-test
+- tar -xf /tmp/build/Rocket.Chat.tar.gz -C /tmp/build-test/
+- cd /tmp/build-test/bundle/programs/server
+- npm install -g node-gyp node-pre-gyp
+- npm install
+- cd -
+- mongo --eval 'rs.status()'
+- mongo meteor --eval 'db.getCollectionNames()'
+script:
+#- npm test
+- mongo meteor --eval 'db.dropDatabase()'
+- unset MONGO_OPLOG_URL
+#- npm test
+before_deploy:
+- source ".travis/setartname.sh"
+- source ".travis/setdeploydir.sh"
+- ".travis/setupsig.sh"
+- ".travis/namefiles.sh"
+- echo ".travis/sandstorm.sh"
+deploy:
+  provider: releases
+  api_key: "b938f3fa99c0af25b9bb182915c9d73a97935386"
+  file: "Rocket.chat.tgz"
+  skip_cleanup: true
+  overwrite: true
+  on:
+    tags: true
+after_deploy:
+- ".travis/docker.sh"
+- ".travis/update-releases.sh"
+- ".travis/snap.sh"
+env:
+  global:
+  - DISPLAY=:99.0
+  - CXX=g++-4.8
+  - secure: HrPOM5sBibYkMcf9aeQThYPCDiXeLkg0Xgv0HvH88/ku/gphDpNEjHNReHZM3cyfm9y3RhHpVdD+Zzy38S2goKyewRzpXJsuyerOYkjND0v3tivhs9CAX8PAUxj1U5zllTyH4bgW2ZwRtNnwnmtIM/JJlnySMpKVDqIZBpbhn3ph9bJ2J+BW3D3Jw8meQ1vCX8szIibyJK/5QX6HG2RBFXJGYoQ8DmR8jQv0aJQvT1Az5DO4yImk8tX4NP95qOc19Jywr1DsbaSBZeJ8lFJAmBpIGx7KAmUVCcxSxfbXGRhs2K4iEYb3rJ/dU6KiyPsKGUG4aYNGgbvcX0ZxX/BZ6ZU9ff0E4IIf43IxoN3ElrOqOFk5msJAXbrJEreINSzDqKOy8NFYtCQ49E2gwzfage4ZXkhFyx3wMPa5bzpr3ncsTceMjMVz03uL781X6NLuCkUmXv+n8K2MNhJU9Xinpdx1GRJm+0lXJspNNJ1ruHeJtls4epj4bmCwKmmZbFKPXqa5e8xVcMIkwt1LMiHduhE+WgKNHdOMhXrCcTxF62ybLlsHXmyLLJeNjTeKS8QG2XSoonClDAz/1R41I1DsMPblcgz9uvYCf7UtyftbhJ83bnJeEmOYQiwijLG0+QMq+B2+mmZan3Z7Hl7O53dnwuLxz7EO7EhQhY+CqHVgc6s=
+  - MONGO_OPLOG_URL: "mongodb://localhost:27017/local"
+  - MONGO_URL: "mongodb://localhost:27017/meteor"
+  - TEST_MODE: "true"
+  - secure: G8NOoeAPyEdfHM4Stqn/RvUwSF29PPQ0Yrz2K3/3c4Vaoi0wNtR7Ky3Jafijl5GRCzNDJAFPhSSgvCHEywu0RVlyBsKeCMqKShNbvBH2BK/qoa7Mivr9R0WzR9s8/nt5NVshauZ/rDaltT1mvu+dltAfSFa8aNqXI2VriG0OI6GFwwcpzQjddPh+8rl5VwX6u9+RNeAgbQyQ9FdHdjrP/lJUTnD6iesfGPEZMl6k81YDymM0HZ8ah22uIGGRdKVboR5HzegET1xznL2xW6SdWEpMd+bj5+saSauC7yKEKr6p1pzIW+mTgv5jqMWFVN7HOwFshHQvZwi1ZMWk9IYpqaIRmR/ZbdmzTSUTld1Gc+KtZo9CgVwlLYB8tSCmRIv6uD86BVkDg6vl5LSJe342x8Ycs+da8IV3zpYDs0AFIj112YIPLTeMFj6eh9TFdPezANHKgsHwKVA9vFI4eO+BcVCslS17Xk8UmMq9qYQRZxMf5NknlZ5giduaikh6pcbmS7LO952zio4vNHlZy8uuZ7aJkeZ9a+GGOuPH4AGcn+fFgXdJHgHbchwL3puTE4eUERe8h2bZcStdEaVVx6k+OVdO0wJ+UBO6O+F7Vr0IeNb0Dj1MsbxZ8kA+XOzfa0L6xBW41qRwOzT0TUr3iMNmDTuJ3fP7/NbEd8h8BBs507Y=
+  - secure: EHAXcPr9CKDyYDxw7RGGReTzwTIgzFTOnn6w9oYcR/VbwSCp58EmNB3zhWRxywDCQdJvJNtvLrFz3LxgkHptf8g/REQC9M+fkAix6C2CHymHcJqX5k419/bOyOuEHSuFCXdyms0mk4pejR09XwlCvFbWsL3f2a/b7aQvsX//UKVy3ZAG0vlksXFKAhWjjlI/SCYysCLGNgCKs2pOZ9AnY3YNsVvrnZZP8BHqwtoQ8Wlp37ugrkDIZ3Xz8SexPzy57fvMgA6ghwowjWfOC177/EGvQ7ehGG4+F+sLOGClVzWGjqCCT74ZmHYuXDMY6ZBix0H4i6BtgZSEvdXWuNdddKgfaussgifweYuXBvYFX9PR0LdUfuEE+If+Q3gKBBvPh8K2fPlV8rRlEOWEJ61RaCiFdibKzcD1ZNQ7IthexElKkCg1HDtK2ebLtDxCNmsaKNJ9K6GXI6TMeQ4DSfJ496wmmEMgbQ7ZEQib0vZknCi2b0c6m94VMFnKtVxtU3oUHDPSJb1MjH+s0xOSaty5sffvN6Dl7N5GIgr/6spSwt6KEcaxBicOny2F1PCQn2kI05zopl1suSWWaVvvhviO2dx0KTvsBk80a1RUGhESOPyq5g2QhqmJ9I6bHD9tuxAwg9IXDdT7KkDoVw0jJKV/XGrtreT+ZnoNmtd227q63gY=
+  - secure: IEJ0M6472NPIm2JMJAhLHfx3py8rCrljUvisDt/BoXXfmtlonl50/WDanzdM9sRNuq4yjR4e/IkKaug0Dr/aGNA+3OApk0VgmCDVnBt656xCaEBQXcD4Gf30SYUT7L4aPGVnHJibgzP8/zFCiH8vUbJBRD5UPoJZzUVv6Boe94JRQU6Gl2JqxIo49VrDbCIuFRvch/0HkDH1M3YwX1DSTMFFlzSB8XHF21r7EIEl0vnEfCBRQd7oe1HgmfODwoyZsoc40JE0xWyzjb/AQj9MCCSV2FeGM7LoDtF/uM7ESszvSavgRuWXCG2FDrd8Ht4QBhp1+FyNZMC96r/dpYKpb/wE4k1Psd0FVTAtrAFOoBKUJP5odsmzqhZoNHLmGct257fc6w81Zz6xraaRBZBUjeEGLt2i9uiBZsaIIdl82TJWqLMjzG+hDEUL3pXTieiNkO4JD3kHhNrzH+VKPOy6pA3GjGEfRLjrk/fYyemtV+BxdQSZhZagyAzp3vesNdyt/w2exFSJUHMAH7MiY48VNZNiFEXhwQhnCMTMck5XvZLU2T48uaerePVbXVNUuLt3k9TqRSoUW+Owo8Tl4lznOkuiiRjzFj7MvP0LN61RXaYS8jckAa9s5cxnfbgtjx9SAnuwf2i3M7ZP9sloUkLNMFALWX8VPJ0iz4qsFqUucac=
+  - secure: iWij6z3KOYC3fwyLj7BbRu3O15g85zCXeJLafvdeWLvcNIsxKy7frMkSIus+yiuNLTBZUy7SFAKxsnVRSul/tcM2tmfxuTFHtZ9qevwtO5jOxdwYq+tSPzXaOYpHc/uJDdAOCpcglyH74LdpexEifLqc8tQkhMWeOrmsy1UOVowjAPWfeuon3AvdNXeknnDj9xMRI5/eEHziJkMf+6vHw0hZytUf8OudwIW1QlcFRr4OC6pW/980dTI9l+1mPlU3LXylCDZLS/hfuCX3+TyAenK7zjZ7pU5/yUCOCeI6t5dg/411l5pOFd1YYX6Jko+Nuu/+m9dsg5eSIlc6kifKUAPDNbyHg4sLdkU883DfD/hT22fX9luUCKKnKRCCguhUnvkDTunOpbGBMhG9pmh5SNzsctU/2Nz8aH8f/ao0eGJTx7o+TWyCrzPt6m/s7reLiiysoIdcln9nLZOJqLMOrhj+GJcIQGWO5+yBZTvImDs0/Ry9e+jyTEggXnM6jsBorPMp0K3zUd/5g8T1xHOTuB9eTYwLo2k53ZBrSVzrnKVRLCp+EJw3oxSN046jCVRrIuPL8g7av1tNYHsmi0pPirkn3VeeabErNeWqtCAFNetIBkz6om1AUz9rwO4EVbylo+x2REP3u7kQYF4wxh7xAd7ZxbIMW3dtjo1S8hA2NhM=
+  - secure: gkeTy12y/cvsdPAQPXppfB5yYq1SmH4vHlJKF/qIccDU2u1OHGsTYEIHKq9gRFYLbAkd22TUAZhXVbqtpupvzt0ulKZCqKKtdozkfRHgrp8P/K6FYuUgAnpkUfY1M9jZ2hfaxPxEpIlqc8CES/jB9UnZ5ayt/65cD+Jdg6DJZy4Wa134APsQazrRlPwy/h0sQKqkG68XWTdbQQqwRwFSPah6ikgYWaype2VvV9qULJgtZHRM48qgdQWCW98sOuTg9ltZkBi5nf/mZLZabPC5WVuYIV19O3OJzcMKaD5dHFIsHqAitr09k6eXE5/IDhUlT3aJCnlariZyRuWTVq/ADnSzei/9ziyhrE7TslOeLzOnRMNCAHM7IlurCxVXP96NJkiP8M87W7vNePDElmN2VjsKjUufBo70iqNmZk7yxVMzErccBESfeW4/cRWfSxbrD7VBFvHASTLb81f8HXHmZ118Gip2Zt4MwyNlL/Pri9iEZQSTC6/1Zq9Y9sMezdUh1XpjA+nPxUg6T2+m7nF0i6BUIwcHgcLAn/tTUYxLJrIixwys7oUdmGBIn1Zc0osg3l6mGFZ+cg+iE8fJTct2GtgJyubVvrsVLsSXDxQ2ofMcx/1a8I5UBpraN77XW36Geo9V564JkPMf0flNKe2rdGHNvJTYPuFu2JXJpPdHV2
+  
