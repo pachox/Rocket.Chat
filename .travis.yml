@@ -69,13 +69,13 @@ script:
 before_deploy:
 - source ".travis/setartname.sh"
 - source ".travis/setdeploydir.sh"
-- ".travis/setupsig.sh"
+#- ".travis/setupsig.sh"
 - ".travis/namefiles.sh"
 - echo ".travis/sandstorm.sh"
 deploy:
   provider: releases
-  api_key: "b938f3fa99c0af25b9bb182915c9d73a97935386"
-  file: "Rocket.chat.tgz"
+  api_key: "8eb8da89215e95bb6059de3397702b8d953fd0a5"
+  file: "rocket.chat.tgz"
   skip_cleanup: true
   overwrite: true
   on:
