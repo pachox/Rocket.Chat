@@ -82,7 +82,6 @@ after_deploy:
 - ".travis/docker.sh"
 - ".travis/update-releases.sh"
 - ".travis/snap.sh"
-
 #after_success:
 #  - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
 #  - export REPO=pachox/fd-rocket.chat
