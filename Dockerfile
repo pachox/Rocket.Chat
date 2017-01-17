@@ -9,11 +9,10 @@ VOLUME /app/uploads
 #COPY rocket.chat.tgz /tmp/
 
 RUN set -x \
- && curl -SLf "https://github.com/pachox/Rocket.Chat/archive/fd.01.00.tar.gz" -o rocket.chat.tgz \
+ && curl -SLf "https://github.com/pachox/Rocket.Chat/releases/download/0.18/rocket.chat-0.18.tgz" -o rocket.chat.tgz \
  && tar -zxf rocket.chat.tgz -C /app \
  && rm rocket.chat.tgz \
- && mkdir /app/bundle \
- && cd /app/bundle/programs/server \
+ && cd /app/bundle/server \
  && npm install \
  && npm cache clear
  
@@ -33,5 +32,6 @@ ENV MONGO_URL=mongodb://localhost:27017/rocketchat \
 EXPOSE 3000
 
 CMD ["node", "main.js"]
+
 
 
