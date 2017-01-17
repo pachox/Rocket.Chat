@@ -77,7 +77,7 @@ deploy:
   on:
     repo: pachox/Rocket.Chat
     #branch: develop
-    tags:true
+    tags: true
 after_deploy:
 - ".travis/docker.sh"
 - ".travis/update-releases.sh"
