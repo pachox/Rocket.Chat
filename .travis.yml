@@ -76,7 +76,8 @@ deploy:
   file: /tmp/deploy/rocket.chat-develop.tgz
   on:
     repo: pachox/Rocket.Chat
-    branch: develop
+    #branch: develop
+    tags:true
 after_deploy:
 - ".travis/docker.sh"
 - ".travis/update-releases.sh"
