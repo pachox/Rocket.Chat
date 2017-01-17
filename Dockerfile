@@ -4,24 +4,26 @@ ENV RC_VERSION develop
 
 MAINTAINER p.baratta@fabbricadigitale.it
 
+RUN groupadd -r rocketchat \
+&& useradd -r -g rocketchat rocketchat
+
 VOLUME /app/uploads
 
-#COPY rocket.chat.tgz /tmp/
-
 RUN set -x \
- && curl -SLf "https://github.com/pachox/Rocket.Chat/releases/download/0.18/rocket.chat-0.18.tgz" -o rocket.chat.tgz \
- #&& tar -zxf rocket.chat.tgz -C /app \
- && tar -zxf rocket.chat.tgz \
+ && curl -SLf "https://github.com/pachox/Rocket.Chat/releases/latest/rocket.chat-0.18.tgz" -o rocket.chat.tgz \
+ && tar -zxvf rocket.chat.tgz \
  && rm rocket.chat.tgz \
  && cd /bundle/programs/server \
- && npm install \
- && npm cache clear
+ && npm install 
+ #&& npm cache clear
  
 
 
 USER rocketchat
 
-WORKDIR /app/bundle
+#WORKDIR /app/bundle
+
+WORKDIR /bundle
 
 # needs a mongoinstance - defaults to container linking with alias 'mongo'
 ENV MONGO_URL=mongodb://localhost:27017/rocketchat \
