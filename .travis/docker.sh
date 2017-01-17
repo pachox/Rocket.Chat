@@ -3,8 +3,7 @@ set -x
 set -euvo pipefail
 IFS=$'\n\t'
 
-#CURL_URL="https://registry.hub.docker.com/u/rocketchat/rocket.chat/trigger/$PUSHTOKEN/"
-CURL_URL="https://github.com/pachox/Rocket.Chat/releases/tag/fd.01.00/"
+CURL_URL="https://registry.hub.docker.com/u/rocketchat/rocket.chat/trigger/$PUSHTOKEN/"
 
 if [[ $TRAVIS_TAG ]]
  then
