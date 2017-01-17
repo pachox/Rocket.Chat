@@ -14,7 +14,7 @@ RUN set -x \
  && tar -zxf rocket.chat.tgz \
  && rm rocket.chat.tgz \
  #&& cd /app/bundle/server \
- && cd bundle/server \
+ && cd /bundle/server \
  && npm install \
  && npm cache clear
  
