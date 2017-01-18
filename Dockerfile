@@ -7,6 +7,9 @@ MAINTAINER p.baratta@fabbricadigitale.it
 
 VOLUME /app/uploads
 
+RUN apt-get update && apt-get install -y gawk wget
+
+
 RUN set -x \
  #&& curl -SLf "https://github.com/pachox/Rocket.Chat/releases/download/0.35/rocket.chat-0.35.tgz" -o rocket.chat.tgz \
  && wget $(curl -s https://api.github.com/repos/pachox/Rocket.Chat/releases/latest | grep browser | awk -F "\"" '{print $4}' ) -O rocket.chat.tgz \
