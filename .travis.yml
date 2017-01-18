@@ -64,7 +64,7 @@ script:
 - npm test
 - mongo meteor --eval 'db.dropDatabase()'
 - unset MONGO_OPLOG_URL
-- npm test
+#- npm test
 before_deploy:
 - source ".travis/setartname.sh"
 - source ".travis/setdeploydir.sh"
