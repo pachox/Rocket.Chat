@@ -88,10 +88,11 @@ after_deploy:
   - export REPO=pachox/fd-rocket.chat
   #- export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
   - export TAG=latest
-  - export TAG=`echo $TRAVIS_BRANCH`
+  #- export TAG=`echo $TRAVIS_BRANCH`
   - docker build -f Dockerfile -t $REPO:$COMMIT .
-  #- docker tag $REPO:$COMMIT $REPO:$TAG ##questo produce un tag f65xxx
-  - docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER ## questo produce il seriale di 
+  #- docker tag $REPO:$COMMIT $REPO:$TAG ## questo produce un tag f65xxx
+  # - docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER ## questo produce il seriale di creazione travis
+  - docker tag $REPO:$COMMIT $REPO:$TRAVIS_BRANCH ## questo produce il tag release
   - docker push $REPO
 env:
   global:
