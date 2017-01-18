@@ -9,7 +9,7 @@ VOLUME /app/uploads
 
 RUN set -x \
  && curl -SLf "https://github.com/pachox/Rocket.Chat/releases/download/0.35/rocket.chat-0.35.tgz" -o rocket.chat.tgz \
- && tar -zxvf rocket.chat.tgz \
+ && tar -zxf rocket.chat.tgz \
  && rm rocket.chat.tgz \
  && cd /bundle/programs/server \
  && npm install 
