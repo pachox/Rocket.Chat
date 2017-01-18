@@ -89,8 +89,8 @@ after_deploy:
   #- export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
   - export TAG=latest
   - docker build -f Dockerfile -t $REPO:$COMMIT .
-  - docker tag $REPO:$COMMIT $REPO:$TAG
-  #- docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER
+  #- docker tag $REPO:$COMMIT $REPO:$TAG ##questo produce un tag f65xxx
+  - docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER ## questo produce il seriale di 
   - docker push $REPO
 env:
   global:
