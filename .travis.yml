@@ -79,11 +79,11 @@ deploy:
     repo: pachox/Rocket.Chat
     #branch: develop
     tags: true
+#after_deploy:
+#- ".travis/docker.sh"
+#- ".travis/update-releases.sh"
+#- ".travis/snap.sh"
 after_deploy:
-- ".travis/docker.sh"
-- ".travis/update-releases.sh"
-- ".travis/snap.sh"
-after_success:
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
   - export REPO=pachox/fd-rocket.chat
   - export TAG=`if [ "$TRAVIS_BRANCH" == "develop" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
