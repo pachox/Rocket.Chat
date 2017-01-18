@@ -4,8 +4,6 @@ ENV RC_VERSION develop
 
 MAINTAINER p.baratta@fabbricadigitale.it
 
-RUN groupadd -r rocketchat \
-&& useradd -r -g rocketchat rocketchat
 
 VOLUME /app/uploads
 
