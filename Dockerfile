@@ -8,8 +8,9 @@ MAINTAINER p.baratta@fabbricadigitale.it
 VOLUME /app/uploads
 
 RUN set -x \
- && curl -SLf "https://github.com/pachox/Rocket.Chat/releases/latest/rocket.chat-0.18.tgz" -o rocket.chat.tgz \
- && tar -zxvf rocket.chat.tgz \
+ ##&& curl -SLf "https://github.com/pachox/Rocket.Chat/releases/latest/rocket.chat-0.18.tgz" -o rocket.chat.tgz \
+ ##&& tar -zxvf rocket.chat.tgz \
+ && tar -zxvf "$ROCKET_DEPLOY_DIR/rocket.chat-$ARTIFACT_NAME.tgz" \
  && rm rocket.chat.tgz \
  && cd /bundle/programs/server \
  && npm install 
