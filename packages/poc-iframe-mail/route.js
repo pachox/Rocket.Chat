@@ -1,5 +1,5 @@
-FlowRouter.route('/iframem', {
-	name: 'iframem',
+FlowRouter.route('/mail', {
+	name: 'mail',
 	action() {
 		Session.set('openedRoom');
 		$('.rocket-loader').remove();
