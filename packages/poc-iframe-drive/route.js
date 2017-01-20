@@ -1,5 +1,5 @@
-FlowRouter.route('/iframed', {
-	name: 'iframed',
+FlowRouter.route('/drive', {
+	name: 'drive',
 	action() {
 		Session.set('openedRoom');
 		$('.rocket-loader').remove();

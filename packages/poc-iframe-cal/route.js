@@ -1,5 +1,5 @@
-FlowRouter.route('/iframec', {
-	name: 'iframec',
+FlowRouter.route('/calendar', {
+	name: 'calendar',
 	action() {
 		Session.set('openedRoom');
 		$('.rocket-loader').remove();
