@@ -14,12 +14,12 @@ class SideNav extends Page {
 	get accountBoxUserName() { return browser.element('.account-box .data h4'); }
 	get accountBoxUserAvatar() { return browser.element('.account-box .avatar-image'); }
 
-	get newChannelBtn() { return browser.element('.rooms-list .add-room:nth-of-type(5)'); }
-	get newChannelIcon() { return browser.element('.rooms-list .add-room:nth-of-type(5) .icon-plus'); }
+	get newChannelBtn() { return browser.element('.rooms-list .add-room:nth-of-type(1)'); }
+	get newChannelIcon() { return browser.element('.rooms-list .add-room:nth-of-type(1) .icon-plus'); }
 	get moreChannels() { return browser.element('.rooms-list .more-channels'); }
 
-	get newDirectMessageBtn() { return browser.element('.rooms-list .add-room:nth-of-type(6)'); }
-	get newDirectMessageIcon() { return browser.element('.rooms-list .add-room:nth-of-type(6) .icon-plus'); }
+	get newDirectMessageBtn() { return browser.element('.rooms-list .add-room:nth-of-type(2)'); }
+	get newDirectMessageIcon() { return browser.element('.rooms-list .add-room:nth-of-type(2) .icon-plus'); }
 	get moreDirectMessages() { return browser.element('.rooms-list .more-direct-messages'); }
 
 	get general() { return browser.element('.rooms-list > .wrapper > ul [title="general"]'); }
