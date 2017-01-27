@@ -1,4 +1,4 @@
-FlowRouter.route('/home', {
+FlowRouter.route('/home2', {
 	name: 'home',
 	action() {
 		Session.set('openedRoom');
