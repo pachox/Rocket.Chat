@@ -10,7 +10,7 @@ import {checkIfUserIsValid} from '../data/checks';
 describe('emoji', ()=> {
 	before(()=>{
 		checkIfUserIsValid(username, email, password);
-		sideNav.getChannelFromList('general').waitForExist(5000);
+		sideNav.getChannelFromList('general').waitForExist(50000);
 		sideNav.openChannel('general');
 	});
 
