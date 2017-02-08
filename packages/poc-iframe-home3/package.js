@@ -23,8 +23,8 @@ Package.onUse(function(api) {
 	api.addFiles('addLink.js', 'client');
 	api.addFiles('styles.less', 'client');
 	api.addFiles('css/style.css', 'client');
-	api.addFiles('js/kendo.all.min.js', 'client');
-	api.addFiles('js/jquery.cookie.min.js', 'client');
+	api.addFiles('js/kendo.all.js', 'client');
+	api.addFiles('js/jquery.cookie.js', 'client');
 	api.addFiles('js/home.js', 'client');	
 	api.addFiles('iframeLink.html', 'client');
 	api.addFiles('iframeArea.html', 'client');
