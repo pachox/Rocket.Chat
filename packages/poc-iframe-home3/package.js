@@ -28,5 +28,5 @@ Package.onUse(function(api) {
 	api.addFiles('css/style.css', 'client');
 	api.addFiles('iframeLink.html', 'client');
 	api.addFiles('iframeArea.html', 'client');
+	api.addFiles('settings.js', 'server'); 
 });
-
