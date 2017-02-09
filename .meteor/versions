@@ -12,6 +12,7 @@ autoupdate@1.2.11
 babel-compiler@6.13.0
 babel-runtime@1.0.1
 base64@1.0.10
+benjaminrh:jquery-cookie@0.1.0
 binary-heap@1.0.10
 blaze@2.3.0
 blaze-html-templates@1.1.0
@@ -59,6 +60,7 @@ jparker:gravatar@0.5.1
 jquery@1.11.10
 kadira:blaze-layout@2.3.0
 kadira:flow-router@2.12.1
+kendo-ui-pro@2017.1.118
 kenton:accounts-sandstorm@0.6.0
 konecty:change-case@2.3.0
 konecty:delayed-task@1.0.0

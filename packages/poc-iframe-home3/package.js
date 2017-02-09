@@ -18,14 +18,14 @@ Package.onUse(function(api) {
 	api.use('less');
 	api.use('rocketchat:lib');
 	api.use('kadira:flow-router', 'client');
-	
+	api.use('jquery', 'client');
+	api.use('kendo-ui-pro');
+	api.use('benjaminrh:jquery-cookie', 'client');
+
 	api.addFiles('route.js', 'client');
 	api.addFiles('addLink.js', 'client');
 	api.addFiles('styles.less', 'client');
 	api.addFiles('css/style.css', 'client');
-	api.addFiles('js/kendo.all.js', 'client');
-	api.addFiles('js/jquery.cookie.js', 'client');
-	api.addFiles('js/home.js', 'client');	
 	api.addFiles('iframeLink.html', 'client');
 	api.addFiles('iframeArea.html', 'client');
 });
