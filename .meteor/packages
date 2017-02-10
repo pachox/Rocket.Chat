@@ -152,7 +152,7 @@ ostrio:cookies
 pauli:accounts-linkedin
 percolate:synced-cron
 raix:handlebar-helpers
-raix:push
+raix:push@3.0.3-rc.7
 raix:ui-dropped-event
 smoral:sweetalert
 steffo:meteor-accounts-saml
@@ -162,6 +162,10 @@ underscorestring:underscore.string
 yasaricli:slugify
 yasinuslu:blaze-meta
 deepwell:bootstrap-datepicker2
-poc-iframe-home
+poc-iframe-home3
+kendo-ui-pro
+benjaminrh:jquery-cookie
 poc-iframe-mail
 poc-iframe-drive
+mizzao:bootstrap-3
+fortawesome:fontawesome
