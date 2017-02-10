@@ -24,5 +24,6 @@ Package.onUse(function(api) {
 	api.addFiles('styles.less', 'client');
 	api.addFiles('iframeLink.html', 'client');
 	api.addFiles('iframeArea.html', 'client');
+	api.addFiles('settings.js', 'server'); 
 });
 
