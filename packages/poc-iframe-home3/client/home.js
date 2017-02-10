@@ -13,7 +13,7 @@ RocketChat.pocIframeHome3 = function () {
         getLastMail: function () {
             $.ajax({
                 type: "GET",
-                url: RocketChat.settings.get('HOME3_Openucapi') + "/mymail",
+                url: RocketChat.settings.get('MyHome_Openucapi') + "/mymail",
                 contentType: "application/json; charset=utf-8",
                 headers: {
                     "x-auth-token": RocketChat.pocIframeHome3.getFromCookies("rc_token"),
@@ -31,7 +31,7 @@ RocketChat.pocIframeHome3 = function () {
             debugger
             $.ajax({
                 type: "GET",
-                url: RocketChat.settings.get('HOME3_Openucapi') + "/mytask",
+                url: RocketChat.settings.get('MyHome_Openucapi') + "/mytask",
                 contentType: "application/json; charset=utf-8",
                 headers: {
                     "x-auth-token": RocketChat.pocIframeHome3.getFromCookies("rc_token"),
@@ -61,7 +61,7 @@ RocketChat.pocIframeHome3 = function () {
         getDrive: function () {
             $.ajax({
                 type: "GET",
-                url: RocketChat.settings.get('HOME3_Openucapi') + "/mydrive",
+                url: RocketChat.settings.get('MyHome_Openucapi') + "/mydrive",
                 contentType: "application/json; charset=utf-8",
                 headers: {
                     "x-auth-token": RocketChat.pocIframeHome3.getFromCookies("rc_token"),
@@ -83,7 +83,7 @@ RocketChat.pocIframeHome3 = function () {
         getContacts: function () {
             $.ajax({
                 type: "GET",
-                url: RocketChat.settings.get('HOME3_Openucapi') + "/mycontact",
+                url: RocketChat.settings.get('MyHome_Openucapi') + "/mycontact",
                 contentType: "application/json; charset=utf-8",
                 headers: {
                     "x-auth-token": RocketChat.pocIframeHome3.getFromCookies("rc_token"),
