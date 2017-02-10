@@ -17,6 +17,7 @@ Package.onUse(function(api) {
 	api.use('jquery', 'client');
 	api.use('kendo-ui-pro');
 	api.use('mizzao:bootstrap-3');
+	api.use('fortawesome:fontawesome');
 	api.use('benjaminrh:jquery-cookie', 'client');
 
 	api.addFiles('server/settings.js', 'server');

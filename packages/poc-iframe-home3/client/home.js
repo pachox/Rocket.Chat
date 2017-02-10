@@ -38,12 +38,19 @@ RocketChat.pocIframeHome3 = function () {
                     "x-user-id": RocketChat.pocIframeHome3.getFromCookies("rc_uid")
                 },
                 success: function (data, status, xhr) {
-                    var ds = new kendo.data.DataSource({
-                        data: data.data
+                    var ds1 = new kendo.data.DataSource({
+                        data: data.data.events
+                    });
+										var ds2 = new kendo.data.DataSource({
+                        data: data.data.todos
                     });
                     $("#mytask").kendoListView({
-                        dataSource: ds,
+                        dataSource: ds1,
                         template: kendo.template($("#taskTMP").html())
+                    })
+										$("#mytodo").kendoListView({
+                        dataSource: ds2,
+                        template: kendo.template($("#todoTMP").html())
                     })
                 },
                 error: function (xhr, status, errorThrown) {
@@ -92,7 +99,7 @@ RocketChat.pocIframeHome3 = function () {
                     })
                 },
                 error: function (xhr, status, errorThrown) {
-                    //todo
+                    //todos
                 }
             });
         },

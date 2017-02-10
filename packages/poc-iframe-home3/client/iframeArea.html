@@ -30,7 +30,9 @@
 					<div class="col-sm-4 home-box">
 						<div class="home-box-content">
 						<h2 class="home-box-title"><a href="https://sogo.fabbricadigitale.it/SOGo/Calendar/">myTASK</a></h2>
-							<div class="lista-principale" id="mytask"> 
+							<div class="lista-principale" id="mytask"> 								
+							</div>
+							<div class="lista-principale" id="mytodo"> 								
 							</div>
 						</div>
 					</div>
@@ -84,32 +86,29 @@
 	    })
     </script>
 		
-		<script type="text/x-kendo-tmpl" id="taskTMP">
-			# $.each(events, function(index, element) { #       
+		<script type="text/x-kendo-tmpl" id="taskTMP">      
 				<p>     
-					<a href="#">
-						<i class="fa fa-clock-o"></i>
-						<span># kendo.parseDate(element.startDate) #</span>
-						element.title
+					<a href="">
+						<i class="fa fa-clock-o"></i>	
+						<span>#= kendo.toString(kendo.parseDate(startDate), 'dd/MM/yy HH:mm') #</span> ${title}
 					</a>
 				</p>
-			# }) #        
-			# $.each(todos, function(index, element) { #    
-				<p>         
-					<a href="#">
-						<i class="fa fa-tasks"></i>
-						<span># kendo.parseDate(element.startDate) #</span>
-						element.title
+		</script>
+		
+		<script type="text/x-kendo-tmpl" id="todoTMP">      
+				<p>     
+					<a href="">
+						<i class="fa fa-tasks"></i>				
+						<span>#= kendo.toString(kendo.parseDate(startDate), 'dd/MM/yy HH:mm') #</span> ${title}
 					</a>
-				 </p>
-			# }) #
+				</p>
 		</script>
 		
 		<script type="text/x-kendo-tmpl" id="contTMP">
 			<tr> 
 				<td scope="row"><i class="fa fa-user"></i></th> 
 				<td>${username}</td> 
-				<td>${firstname}</td> 
+				<td>${firstName}</td> 
 				<td>${lastName}</td> 
 				<td>${email}</td> 
 			</tr> 
