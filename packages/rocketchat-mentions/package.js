@@ -8,10 +8,11 @@ Package.describe({
 Package.onUse(function(api) {
 	api.use([
 		'ecmascript',
-		'coffeescript',
-		'rocketchat:lib'
+		'rocketchat:lib',
+		'underscore'
 	]);
 
-	api.addFiles('server.coffee', 'server');
-	api.addFiles('client.coffee', 'client');
+	api.addFiles('server.js', 'server');
+	api.addFiles('client.js', 'client');
+	// api.('mentions.js', 'client');
 });

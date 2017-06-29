@@ -65,15 +65,15 @@ getDataToSyncUserData = function getDataToSyncUserData(ldapUser, user) {
 	if (syncUserData && syncUserDataFieldMap) {
 		const fieldMap = JSON.parse(syncUserDataFieldMap);
 		const userData = {};
-
 		const emailList = [];
 		_.map(fieldMap, function(userField, ldapField) {
-			if (!ldapUser.object.hasOwnProperty(ldapField)) {
-				return;
-			}
-
 			switch (userField) {
 				case 'email':
+					if (!ldapUser.object.hasOwnProperty(ldapField)) {
+						logger.debug(`user does not have attribute: ${ ldapField }`);
+						return;
+					}
+
 					if (_.isObject(ldapUser.object[ldapField])) {
 						_.map(ldapUser.object[ldapField], function(item) {
 							emailList.push({ address: item, verified: true });
@@ -84,8 +84,37 @@ getDataToSyncUserData = function getDataToSyncUserData(ldapUser, user) {
 					break;
 
 				case 'name':
-					if (user.name !== ldapUser.object[ldapField]) {
-						userData.name = ldapUser.object[ldapField];
+					const templateRegex = /#{(\w+)}/gi;
+					let match = templateRegex.exec(ldapField);
+					let tmpLdapField = ldapField;
+
+					if (match == null) {
+						if (!ldapUser.object.hasOwnProperty(ldapField)) {
+							logger.debug(`user does not have attribute: ${ ldapField }`);
+							return;
+						}
+						tmpLdapField = ldapUser.object[ldapField];
+					} else {
+						logger.debug('template found. replacing values');
+						while (match != null) {
+							const tmplVar = match[0];
+							const tmplAttrName = match[1];
+
+							if (!ldapUser.object.hasOwnProperty(tmplAttrName)) {
+								logger.debug(`user does not have attribute: ${ tmplAttrName }`);
+								return;
+							}
+
+							const attrVal = ldapUser.object[tmplAttrName];
+							logger.debug(`replacing template var: ${ tmplVar } with value from ldap: ${ attrVal }`);
+							tmpLdapField = tmpLdapField.replace(tmplVar, attrVal);
+							match = templateRegex.exec(ldapField);
+						}
+					}
+
+					if (user.name !== tmpLdapField) {
+						userData.name = tmpLdapField;
+						logger.debug(`user.name changed to: ${ tmpLdapField }`);
 					}
 					break;
 			}
@@ -122,9 +151,13 @@ syncUserData = function syncUserData(user, ldapUser) {
 
 	const userData = getDataToSyncUserData(ldapUser, user);
 	if (user && user._id && userData) {
+		logger.debug('setting', JSON.stringify(userData, null, 2));
+		if (userData.name) {
+			RocketChat._setRealName(user._id, userData.name);
+			delete userData.name;
+		}
 		Meteor.users.update(user._id, { $set: userData });
 		user = Meteor.users.findOne({_id: user._id});
-		logger.debug('setting', JSON.stringify(userData, null, 2));
 	}
 
 	if (RocketChat.settings.get('LDAP_Username_Field') !== '') {
@@ -139,23 +172,29 @@ syncUserData = function syncUserData(user, ldapUser) {
 		const avatar = ldapUser.raw.thumbnailPhoto || ldapUser.raw.jpegPhoto;
 		if (avatar) {
 			logger.info('Syncing user avatar');
+
 			const rs = RocketChatFile.bufferToStream(avatar);
-			RocketChatFileAvatarInstance.deleteFile(encodeURIComponent(`${user.username}.jpg`));
-			const ws = RocketChatFileAvatarInstance.createWriteStream(encodeURIComponent(`${user.username}.jpg`), 'image/jpeg');
-			ws.on('end', Meteor.bindEnvironment(function() {
+			const fileStore = FileUpload.getStore('Avatars');
+			fileStore.deleteByName(user.username);
+
+			const file = {
+				userId: user._id,
+				type: 'image/jpeg'
+			};
+
+			fileStore.insert(file, rs, () => {
 				Meteor.setTimeout(function() {
 					RocketChat.models.Users.setAvatarOrigin(user._id, 'ldap');
 					RocketChat.Notifications.notifyLogged('updateAvatar', {username: user.username});
 				}, 500);
-			}));
-			rs.pipe(ws);
+			});
 		}
 	}
 };
 
 addLdapUser = function addLdapUser(ldapUser, username, password) {
-	var userObject = {
-		username: username
+	const userObject = {
+		username
 	};
 
 	const userData = getDataToSyncUserData(ldapUser, {});
@@ -165,7 +204,7 @@ addLdapUser = function addLdapUser(ldapUser, username, password) {
 	} else if (ldapUser.object.mail && ldapUser.object.mail.indexOf('@') > -1) {
 		userObject.email = ldapUser.object.mail;
 	} else if (RocketChat.settings.get('LDAP_Default_Domain') !== '') {
-		userObject.email = username + '@' + RocketChat.settings.get('LDAP_Default_Domain');
+		userObject.email = `${ username }@${ RocketChat.settings.get('LDAP_Default_Domain') }`;
 	} else {
 		const error = new Meteor.Error('LDAP-login-error', 'LDAP Authentication succeded, there is no email to create an account. Have you tried setting your Default Domain in LDAP Settings?');
 		logger.error(error);
@@ -210,7 +249,7 @@ sync = function sync() {
 				const username = slug(getLdapUsername(ldapUser));
 				// Look to see if user already exists
 				const userQuery = {
-					username: username
+					username
 				};
 
 				logger.debug('userQuery', userQuery);

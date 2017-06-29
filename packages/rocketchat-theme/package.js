@@ -9,7 +9,6 @@ Package.onUse(function(api) {
 	api.use('rocketchat:lib');
 	api.use('rocketchat:logger');
 	api.use('rocketchat:assets');
-	api.use('coffeescript');
 	api.use('ecmascript');
 	api.use('less');
 	api.use('underscore');
@@ -17,9 +16,12 @@ Package.onUse(function(api) {
 	api.use('webapp-hashing');
 	api.use('templating', 'client');
 
+	// Compiled stylesheets
+	api.addFiles('client/main.css', 'client');
+
 	// Server side files
-	api.addFiles('server/server.coffee', 'server');
-	api.addFiles('server/variables.coffee', 'server');
+	api.addFiles('server/server.js', 'server');
+	api.addFiles('server/variables.js', 'server');
 
 	// Colorpicker
 	api.addFiles('client/vendor/jscolor.js', 'client');
@@ -35,11 +37,7 @@ Package.onUse(function(api) {
 	api.addAssets('client/vendor/fontello/font/fontello.woff', 'client');
 	api.addAssets('client/vendor/fontello/font/fontello.woff2', 'client');
 
-	// Compiled stylesheets
-	api.addFiles('client/main.less', 'client');
-
 	// Run-time stylesheets
-	api.addAssets('server/lesshat.less', 'server');
 	api.addAssets('server/colors.less', 'server');
 });
 

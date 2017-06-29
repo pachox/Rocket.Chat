@@ -1,8 +1,8 @@
 /* globals openRoom, LivechatInquiry */
 
 RocketChat.roomTypes.add('l', 5, {
-	template: 'livechat',
 	icon: 'icon-chat-empty',
+	label: 'Livechat',
 	route: {
 		name: 'live',
 		path: '/live/:code(\\d+)',
@@ -39,7 +39,7 @@ RocketChat.roomTypes.add('l', 5, {
 
 	getUserStatus(roomId) {
 		let guestName;
-		const room = Session.get('roomData' + roomId);
+		const room = Session.get(`roomData${ roomId }`);
 
 		if (room) {
 			guestName = room.v && room.v.username;
@@ -49,7 +49,7 @@ RocketChat.roomTypes.add('l', 5, {
 		}
 
 		if (guestName) {
-			return Session.get('user_' + guestName + '_status');
+			return Session.get(`user_${ guestName }_status`);
 		}
 	},
 
