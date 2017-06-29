@@ -50,14 +50,9 @@ before_script:
 - travis_retry meteor npm install
 - |-
   mongo --eval 'rs.initiate({_id:"rs0", members: [{"_id":1, "host":"localhost:27017"}]})'
-<<<<<<< HEAD
 #- meteor npm run lint
 #- meteor npm run stylelint
-=======
-- meteor npm run lint
-- meteor npm run testunit
-- meteor npm run stylelint
->>>>>>> upstream/develop
+#- meteor npm run testunit
 - travis_retry meteor build --headless /tmp/build
 - mkdir /tmp/build-test
 - tar -xf /tmp/build/Rocket.Chat.tar.gz -C /tmp/build-test/
@@ -80,7 +75,6 @@ before_deploy:
 - ".travis/namefiles.sh"
 - echo ".travis/sandstorm.sh"
 deploy:
-<<<<<<< HEAD
   skip_cleanup: true
   provider: releases
   api_key:
@@ -95,26 +89,6 @@ deploy:
 #- ".travis/docker.sh"
 #- ".travis/update-releases.sh"
 #- ".travis/snap.sh"
-=======
-  - provider: s3
-    access_key_id: AKIAIKIA7H7D47KUHYCA
-    secret_access_key: "$ACCESSKEY"
-    bucket: download.rocket.chat
-    skip_cleanup: true
-    upload_dir: build
-    local_dir: "$ROCKET_DEPLOY_DIR"
-    on:
-      condition: "$TRAVIS_PULL_REQUEST=false"
-      all_branches: true
-  # - provider: releases
-  #   api-key: "$GITHUB_TOKEN"
-  #   file_glob: true
-  #   file: build/*
-  #   skip_cleanup: true
-  #   on:
-  #     tags: true
-
->>>>>>> upstream/develop
 after_deploy:
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
   - export REPO=pachox/fd-rocket.chat
