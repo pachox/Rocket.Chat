@@ -20,10 +20,11 @@ Meteor.methods({
 
 		RocketChat.models.Uploads.updateFileComplete(file._id, Meteor.userId(), _.omit(file, '_id'));
 
-		const fileUrl = `/file-upload/${ file._id }/${ file.name }`;
+		const fileUrl = `/file-upload/${ file._id }/${ encodeURI(file.name) }`;
 
 		const attachment = {
 			title: file.name,
+			type: 'file',
 			description: file.description,
 			title_link: fileUrl,
 			title_link_download: true
@@ -54,7 +55,8 @@ Meteor.methods({
 			msg: '',
 			file: {
 				_id: file._id,
-				name: file.name
+				name: file.name,
+				type: file.type
 			},
 			groupable: false,
 			attachments: [attachment]
